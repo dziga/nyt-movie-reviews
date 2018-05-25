@@ -1,0 +1,13 @@
+.list{ 
+  list-style-type: none;
+  width: 80%;
+  margin-left: 10%;
+}
+
+.list-item {
+  padding: 3px;
+  border-radius: 3%;
+  border: solid 1px lightgray;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
