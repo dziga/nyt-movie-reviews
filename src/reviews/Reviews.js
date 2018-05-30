@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import debounce from 'lodash.debounce';
-import Api from '../Api';
 import SearchInput from '../search/SearchInput';
 import SearchResults from '../search/SearchResults';
 import ReviewDetails from './ReviewDetails';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { selectReview, getReviews } from '../actions';
 import './Reviews.css';
 
 class Reviews extends Component {
@@ -12,32 +14,17 @@ class Reviews extends Component {
     super(props);
     this.state = {
       reviews: [],
-      selectedReview: JSON.parse(localStorage.getItem('selectedReview') || null)
+      selectedReview: null
     };
   }
-
+  
   search = event => {
     event.persist();
-    debounce(() => this.getReviews(event.target.value), 500)();
-  }
-
-  getReviews(term) {
-    Api.searchReviews(term).then(reviews => {
-      this.setState({
-        reviews
-      })
-    })
-  }
-
-  selectReview = (selectedReview) => {
-    this.setState({
-      selectedReview
-    })
-    localStorage.setItem('selectedReview', JSON.stringify(selectedReview));
+    debounce(() => this.props.getReviews(event.target.value), 500)();
   }
 
   componentDidMount() {
-    this.getReviews('');
+    this.props.getReviews('');
   }
 
   render() { 
@@ -45,14 +32,25 @@ class Reviews extends Component {
       <div>
         <SearchInput handler={this.search}/>
         <div className="review-section"> 
-          <ReviewDetails review={this.state.selectedReview}/>
+          <ReviewDetails review={this.props.selectedReview}/>
         </div>
         <div className="review-section"> 
-          <SearchResults reviews={this.state.reviews} onReviewSelection={this.selectReview}/>
+          <SearchResults reviews={this.props.reviews} onReviewSelection={this.props.selectReview}/>
         </div>
       </div>
     )
   }
 }
 
-export default Reviews;
+function mapStateToProps(state){
+  return {
+    reviews: state.reviews,
+    selectedReview: state.selectedReview
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({getReviews, selectReview}, dispatch);
+}
+
+export default connect (mapStateToProps, mapDispatchToProps)(Reviews);

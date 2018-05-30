@@ -38,7 +38,7 @@ class Critics extends Component {
   }
 }
 
-function mapStateToProps(state, props){
+function mapStateToProps(state){
   return {
     critics: state.critics,
     critic: state.critic
