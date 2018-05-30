@@ -2,7 +2,6 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 import apiMock from '../Api';
 import Critics from './Critics';
-import { shallow } from 'enzyme';
 
 jest.mock('./CriticsList.js', () => {return ''})
 jest.mock('./CriticDetails.js', () => {return ''})
