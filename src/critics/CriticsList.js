@@ -8,7 +8,7 @@ const CriticsList = (props) => {
 
   const listCritics = () => {
     return props.critics.map((critic, index) => {
-      return  <li className="list-item" key={index} onClick={() => props.onCriticSelected(critic.display_name)}>
+      return  <li className="list-item" key={index} onClick={() => props.onCriticSelected(critic)}>
                 <Link to={`/critics/${critic.display_name}`}> 
                   <Critic critic={critic} /> 
                 </Link>
