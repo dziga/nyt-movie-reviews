@@ -49,4 +49,5 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({getCritics, selectCritic}, dispatch);
 }
 
+export { Critics };
 export default connect (mapStateToProps, mapDispatchToProps)(Critics);

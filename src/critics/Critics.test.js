@@ -1,19 +1,23 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import apiMock from '../Api';
-import Critics from './Critics';
+import { Critics } from './Critics';
 
 jest.mock('./CriticsList.js', () => {return ''})
 jest.mock('./CriticDetails.js', () => {return ''})
 
-const critics = [{display_name:'name'}]
-
-apiMock.getCritics = () => {
-  return Promise.resolve(critics)
+const critics = [{display_name:'name'}];
+const props = {
+  getCritics: () => jest.fn(),
+  match: {
+    params: {
+      name: 'name'
+    }
+  }
 }
 
 it ('should contain filters', () => {
-  const critics = renderer.create(<Critics match={{params:{name: 'name'}}} />).root;
+  const critics = renderer.create(<Critics {...props} />).root;
   
   const filters = critics.findAllByType('button');
   expect(filters[0].props.children).toBe('all')
@@ -22,16 +26,16 @@ it ('should contain filters', () => {
 })
 
 it ('should set state after component mounting', () => {
-  const critic = renderer.create(<Critics match={{params:{name: 'name'}}} />).getInstance()
+  const critic = renderer.create(<Critics {...props} />).getInstance()
   
   setImmediate(() => {
-    expect(critic.state).toEqual({ critics, critic: critics[0]})
+    expect(critic.state).toEqual({ critics: [], critic: {}})
   }, 0);
 })
 
 it('should filter on click', () => {
-  const fetchCriticsMock = jest.spyOn(Critics.prototype, 'fetchCritics');
-  const critics = renderer.create(<Critics match={{params:{name: 'name'}}} />).root;
+  const fetchCriticsMock = jest.spyOn(props, 'getCritics');
+  const critics = renderer.create(<Critics {...props} />).root;
 
   const filtersAll = critics.find(e => e.type === 'button' && e.children[0] === 'all');
   const filtersFull = critics.find(e => e.type === 'button' && e.children[0] === 'full time');
